@@ -24,7 +24,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-	res.send('test continuous integration');
+	res.send('test continuous integration '+process.env.FB_PAGE_ACCESS_TOKEN);
 })
 
 // for facebook verification
