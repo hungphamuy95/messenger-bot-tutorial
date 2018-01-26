@@ -11,7 +11,7 @@ i have added console.log on line 48
 'use strict'
 const express = require('express')
 const bodyParser = require('body-parser')
-const request = require('request')
+const request = require('request');
 const app = express()
 
 app.set('port', (process.env.PORT))
@@ -25,12 +25,14 @@ app.use(bodyParser.json())
 // index
 app.get('/', function (req, res) {
 	res.send('test continuous integration ');
+	console.log("what the fuck");
 })
 
 // for facebook verification
 app.get('/webhook/', function (req, res) {
 	if (req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
-		res.send(req.query['hub.challenge'])
+		res.send(req.query['hub.challenge']);
+		console.log("success");
 	} else {
 		res.send('Error, wrong token')
 	}
@@ -38,17 +40,26 @@ app.get('/webhook/', function (req, res) {
 
 // to post data
 app.post('/webhook/', function (req, res) {
+	console.log(req.body.entry[0].messaging);
 	let messaging_events = req.body.entry[0].messaging
 	for (let i = 0; i < messaging_events.length; i++) {
 		let event = req.body.entry[0].messaging[i]
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
+			debugger;
 			let text = event.message.text
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+		}
+		else if(event.message.attachments){
+			debugger;
+			let url=event.message.attachments[0].payload.url;
+			console.log(url);
+			let textResponse = JSON.stringify(detectImage(url));
+			sendTextMessage(sender, textResponse);
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback)
-			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
 			continue
 		}
 	}
@@ -80,6 +91,33 @@ function sendTextMessage(sender, text) {
 			console.log('Error: ', response.body.error)
 		}
 	})
+}
+
+function detectImage(imageUrl){
+	let getResponse;
+	const subcriptionId = process.env.SUBCRIPTION_ID;
+	request({
+		url:"https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect",
+		qs:{
+			"returnFaceId": "true",
+            "returnFaceLandmarks": "false",
+            "returnFaceAttributes": "age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise",
+		},
+		method:'POST',
+		headers:{
+			"Content-Type":"application/json",
+			"Ocp-Apim-Subscription-Key":subcriptionId
+		},
+		json:{
+			"url": imageUrl
+		}
+	},(error, response, body)=>{
+		//console.log(response);
+		console.log(process.env.SUBCRIPTION_ID);
+		getResponse=response;
+	});
+	console.log("cognitive service "+getResponse);
+	return getResponse;
 }
 
 app.listen(app.get('port'), function() {
