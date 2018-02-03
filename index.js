@@ -1,3 +1,5 @@
+
+
 //This is still work in progress
 /*
 Please report any bugs to nicomwaks@gmail.com
@@ -9,10 +11,10 @@ i have added console.log on line 48
 
  */
 'use strict'
-const express = require('express')
-const bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser');
 const request = require('request');
-const app = express()
+const app = express();
 
 app.set('port', (process.env.PORT))
 
@@ -46,17 +48,15 @@ app.post('/webhook/', function (req, res) {
 		let event = req.body.entry[0].messaging[i]
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
-			debugger;
 			let text = event.message.text
 			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 		}
-		else if(event.message.attachments){
-			debugger;
-			let url=event.message.attachments[0].payload.url;
-			console.log(url);
-			let textResponse = JSON.stringify(detectImage(url));
-			sendTextMessage(sender, textResponse);
-		}
+		if(event.message && event.message.attachments){
+			let text = event.message.text
+		 	let url=event.message.attachments[0].payload.url;
+		 	detectImage(sender, text, url);
+		 	// sendTextMessage(sender, textResponse);
+		 }
 		if (event.postback) {
 			let text = JSON.stringify(event.postback)
 			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token);
@@ -90,34 +90,83 @@ function sendTextMessage(sender, text) {
 		} else if (response.body.error) {
 			console.log('Error: ', response.body.error)
 		}
+		else if(response.body){
+			console.log("body responseed"+response.body);
+		}
 	})
 }
 
-function detectImage(imageUrl){
-	let getResponse;
+function covertGender(gender){
+	if(gender==="male"){
+		return "nam";
+	}else{
+		return "nũ";
+	}
+}
+
+function sendTextImage(sender, text, resReg){
+	let messageData;
+	if(resReg.length>1){
+	messageData={text:"trong ảnh có nhiều hơn một người"}
+	}
+	else if(resReg.length==0){
+		messageData={text:"trong ảnh không có hiện mặt người"}
+	}
+	else{
+	 messageData = { text: "người này "+Math.round(resReg[0].faceAttributes.age)+", giới tính "+covertGender(resReg[0].faceAttributes.gender)+"" }
+	}
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+		qs: {
+			access_token: token,
+		  },
+		method: 'POST',
+		json: {
+			recipient: {id:sender},
+			message: messageData,
+		}
+	}, function(error, response, body) {
+		console.log(body);
+		if (error) {
+			console.log('Error sending messages: ', error)
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error)
+		}
+		else if(response.body){
+			console.log("body responseed"+response.body);
+		}
+	})
+}
+
+function detectImage(sender, text, imageUrl){
+	console.log(imageUrl);
 	const subcriptionId = process.env.SUBCRIPTION_ID;
 	request({
-		url:"https://westcentralus.api.cognitive.microsoft.com/face/v1.0/detect",
-		qs:{
-			"returnFaceId": "true",
-            "returnFaceLandmarks": "false",
-            "returnFaceAttributes": "age,gender,headPose,smile,facialHair,glasses,emotion,hair,makeup,occlusion,accessories,blur,exposure,noise",
-		},
-		method:'POST',
-		headers:{
-			"Content-Type":"application/json",
-			"Ocp-Apim-Subscription-Key":subcriptionId
-		},
-		json:{
-			"url": imageUrl
-		}
-	},(error, response, body)=>{
-		//console.log(response);
-		console.log(process.env.SUBCRIPTION_ID);
-		getResponse=response;
-	});
-	console.log("cognitive service "+getResponse);
-	return getResponse;
+	 	url:"https://southeastasia.api.cognitive.microsoft.com/face/v1.0/detect?",
+	 	qs:{
+	 	 	"returnFaceId": "true",
+              "returnFaceLandmarks": "false",
+              "returnFaceAttributes": "age,gender",
+	 	},
+	 	method:'POST',
+	 	headers:{
+	 		"Content-Type":"application/json",
+	 		"Ocp-Apim-Subscription-Key":subcriptionId
+	 	},
+	 	json:{
+	 		"url": imageUrl
+	 	}
+	 },(error, response, body)=>{
+	 	if(body){
+			 sendTextImage(sender, text, body);
+		 }
+	 	 else if(error){
+			 console.log("Error When calling cognitive service" + error);
+		 }
+		 else if(response.body.error){
+			 console.log("Error When calling cognitive service"+response.body.error);
+		 }
+	 });
 }
 
 app.listen(app.get('port'), function() {
