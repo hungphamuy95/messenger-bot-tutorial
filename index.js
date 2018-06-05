@@ -134,8 +134,10 @@ function handleResponse(sender, text) {
 			text: "Tôi sợ rằng đéo hiểu những gì bạn nói, tôi có giúp gì cho bạn :D"
 		}
 	} else {
-
-		if (_.has(text, 'list'))
+		var filterRes = resObj.entities.intent.filter((item) => {
+			return item.value = 'greeting'
+		});
+		if (_.has(resObj.entities, 'list'))
 			messageData = {
 				text: `mặt hàng hiện tai chúng tôi đang có:
 			${()=>{
@@ -144,9 +146,9 @@ function handleResponse(sender, text) {
 				}
 			}}`
 			}
-		else if (_.has(text, 'greeting')) {
+		else if (filterRes !== undefined) {
 			messageData = {
-				text: 'chào bạn :) mình có thể giúp gì cho bạn'
+				text: 'chào bạn ༼-つ-◕_◕-༽つ  mình có thể giúp gì cho bạn'
 			}
 		}
 	}
