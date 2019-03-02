@@ -71,3 +71,48 @@
 [debug] [2019-03-02T07:39:03.017Z] <<< HTTP RESPONSE 200
 [debug] [2019-03-02T07:39:03.018Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-02c35c7f-69d7-4d4f-a105-a0949a76b143/4203679a-d227-4e93-8f01-719f11d59df5.zip?GoogleAccessId=service-167918342485@gcf-admin-robot.iam.gserviceaccount.com&Expires=1551514144&Signature=iweJ1OxQT6Bo4NbJe%2F3jteMXYj4xVk46kscKtrwU0YeLafqsWIxAg3OmIfvZvkAAwVDaaxd0LO2Q1AI55Cerz7LfaJbHVZkNkifuw0xoT24h8uymhnhzdw7X9j0Qrn0vKCtm2Y3TJylv0RgKkLgq9pL4wghSNtTPjkd%2BJNek%2BrIm%2B77AYEZDlLxwHts3F9OpO4hGcWbVoeu5njI4lf4uUoSHYGczJ9j98icRZckiAi66WKzFMkXuIbkW9ikSffs0XmBwGPxgUprOn7AvpMHkUoRLCxQssyd60Df0u5FoOC0DlcQ0vIppnQrELHGsaQ8MAqS4mjvhnz8azA6x8%2Bju5g%3D%3D  
 
+[debug] [2019-03-02T07:39:03.616Z] <<< HTTP RESPONSE 200
+[info] +  functions: functions folder uploaded successfully
+[debug] [2019-03-02T07:39:03.620Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/facereg-805ec/locations/-/functions  
+ 
+[debug] [2019-03-02T07:39:04.085Z] <<< HTTP RESPONSE 200
+[info] i  functions: creating Node.js 6 function botapp(us-central1)...
+[debug] [2019-03-02T07:39:04.088Z] Trigger is:  {"httpsTrigger":{}}
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	helloWorld(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+
+[info] i  functions: deleting function helloWorld(us-central1)...
+[debug] [2019-03-02T07:39:13.429Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/facereg-805ec/locations/us-central1/functions  
+
+[debug] [2019-03-02T07:39:13.430Z] >>> HTTP REQUEST DELETE https://cloudfunctions.googleapis.com/v1/projects/facereg-805ec/locations/us-central1/functions/helloWorld  
+ 
+[debug] [2019-03-02T07:39:13.965Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:13.974Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:13.976Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/facereg-805ec/locations/-/functions  
+ 
+[debug] [2019-03-02T07:39:14.472Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:14.473Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9ib3RhcHAvT01YNV9yWnFqdHM  
+ 
+[debug] [2019-03-02T07:39:14.474Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9oZWxsb1dvcmxkL2lmdkxqbGJKd19N  
+ 
+[debug] [2019-03-02T07:39:14.819Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:14.835Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:16.821Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9ib3RhcHAvT01YNV9yWnFqdHM  
+ 
+[debug] [2019-03-02T07:39:16.836Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9oZWxsb1dvcmxkL2lmdkxqbGJKd19N  
+ 
+[debug] [2019-03-02T07:39:17.162Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:17.168Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:19.163Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9ib3RhcHAvT01YNV9yWnFqdHM  
+ 
+[debug] [2019-03-02T07:39:19.169Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9oZWxsb1dvcmxkL2lmdkxqbGJKd19N  
+ 
+[debug] [2019-03-02T07:39:19.497Z] <<< HTTP RESPONSE 200
+[debug] [2019-03-02T07:39:19.550Z] <<< HTTP RESPONSE 200
+[info] +  functions[helloWorld(us-central1)]: Successful delete operation. 
+[debug] [2019-03-02T07:39:21.498Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/ZmFjZXJlZy04MDVlYy91cy1jZW50cmFsMS9ib3RhcHAvT01YNV9yWnFqdHM  
+ 
+[debug] [2019-03-02T07:39:21.831Z] <<< HTTP RESPONSE 200
