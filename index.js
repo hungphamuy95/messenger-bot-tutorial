@@ -51,7 +51,7 @@ app.post('/webhook/', function (req, res) {
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			let text = event.message.text
-			answerResponse(sender, text);
+			sendTextMessage(sender, text);
 		}
 		if (event.message && event.message.attachments) {
 			let text = event.message.text
