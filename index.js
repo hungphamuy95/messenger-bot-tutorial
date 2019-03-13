@@ -28,7 +28,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-	res.send('test continuous integration ');
+	res.send('test azure');
 })
 
 // for facebook verification
