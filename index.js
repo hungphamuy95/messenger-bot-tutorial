@@ -16,6 +16,7 @@ const app = express();
 const _ = require('lodash');
 const witToken = process.env.WIT_TOKEN;
 
+
 app.set('port', (process.env.PORT))
 
 // parse application/x-www-form-urlencoded
