@@ -57,12 +57,12 @@ app.post('/webhook/', function (req, res) {
 		if (event.message && event.message.attachments) {
 			let text = event.message.text
 			let url = event.message.attachments[0].payload.url;
-			detectImage(sender, text, url);
-			sendTextMessage(sender, textResponse);
+			// detectImage(sender, text, url);
+			// sendTextMessage(sender, textResponse);
 		}
 		if (event.postback) {
 			let text = JSON.stringify(event.postback)
-			sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
+			//sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
 			continue
 		}
 	}
