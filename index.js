@@ -28,7 +28,7 @@ app.use(bodyParser.json())
 
 // index
 app.get('/', function (req, res) {
-	res.send('test azure');
+	res.send('starting localhost');
 })
 
 // for facebook verification
@@ -68,7 +68,7 @@ app.post('/webhook/', function (req, res) {
 	res.sendStatus(200)
 })
 
-const token = process.env.FB_PAGE_ACCESS_TOKEN;
+const token = process.env.FB_PAGE_ACCESS_TOKEN;;
 
 function sendTextMessage(sender, text) {
 	let messageData = {
