@@ -53,9 +53,9 @@ app.post('/webhook/', function (req, res) {
 		if (event.message && event.message.text) {
 			console.log(JSON.stringify(event.message));
 			let text = event.message.text;
-			if(event.message.nlp.entities.hasOwnProperty("url")){
+			if (event.message.nlp.entities.hasOwnProperty("url")) {
 				faceApi(sender, text);
-			}else{
+			} else {
 				sendTextMessage(sender, text);
 			}
 		}
@@ -96,7 +96,7 @@ function faceApi(sender, text) {
 			console.log('Error: ', response.body.error)
 		} else if (response.body) {
 			console.log("body responseed: " + JSON.stringify(response.body));
-			let textReceived = "người này " + response.body[0].faceAttributes.age + " tuổi";
+			let textReceived = "người này " + response.body[0].faceAttributes.age + " tuổi, giới tính " + convertGender(response.body[0].faceAttributes.gender);
 			sendTextMessage(sender, textReceived);
 		}
 	})
@@ -129,6 +129,14 @@ function sendTextMessage(sender, text) {
 			//console.log("body responseed" + response.body);
 		}
 	})
+}
+
+function convertGender(sex) {
+	if (sex === "female") {
+		return "nữ";
+	} else {
+		return "nam";
+	}
 }
 
 function xhrRequest(url, method, headers, query, data) {
