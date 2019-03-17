@@ -52,13 +52,18 @@ app.post('/webhook/', function (req, res) {
 		let sender = event.sender.id
 		if (event.message && event.message.text) {
 			console.log(JSON.stringify(event.message));
-			console.log(JSON.stringify(event));
-			let text = event.message.text
-			sendTextMessage(sender, text);
+			let text = event.message.text;
+			if(event.message.nlp.entities.hasOwnProperty("url")){
+				faceApi(sender, text);
+			}else{
+				sendTextMessage(sender, text);
+			}
 		}
 		if (event.message && event.message.attachments) {
-			let text = event.message.text
-			let url = event.message.attachments[0].payload.url;
+			let text = event.message.text;
+			//faceApi(sender, text);
+			// let text = event.message.text
+			// let url = event.message.attachments[0].payload.url;
 			// detectImage(sender, text, url);
 			// sendTextMessage(sender, textResponse);
 		}
@@ -71,12 +76,37 @@ app.post('/webhook/', function (req, res) {
 	res.sendStatus(200)
 })
 
-const token = process.env.FB_PAGE_ACCESS_TOKEN;;
+const token = process.env.FB_PAGE_ACCESS_TOKEN;
+
+function faceApi(sender, text) {
+	request({
+		url: "https://westus.api.cognitive.microsoft.com/face/v1.0/detect?returnFaceId=true&returnFaceLandmarks=false&returnFaceAttributes=age,gender,emotion",
+		method: "POST",
+		json: {
+			"url": text
+		},
+		headers: {
+			'Content-Type': 'application/json',
+			'Ocp-Apim-Subscription-Key': process.env.COGNITIVE_SERVICE
+		}
+	}, (error, response, body) => {
+		if (error) {
+			console.log('Error sending messages: ', error)
+		} else if (response.body.error) {
+			console.log('Error: ', response.body.error)
+		} else if (response.body) {
+			console.log("body responseed: " + JSON.stringify(response.body));
+			let textReceived = "người này " + response.body[0].faceAttributes.age + " tuổi";
+			sendTextMessage(sender, textReceived);
+		}
+	})
+}
 
 function sendTextMessage(sender, text) {
 	let messageData = {
 		text: text
 	}
+
 
 	request({
 		url: 'https://graph.facebook.com/v2.6/me/messages',
@@ -96,7 +126,7 @@ function sendTextMessage(sender, text) {
 		} else if (response.body.error) {
 			console.log('Error: ', response.body.error)
 		} else if (response.body) {
-			console.log("body responseed" + response.body);
+			//console.log("body responseed" + response.body);
 		}
 	})
 }
@@ -143,11 +173,11 @@ function handleResponse(sender, text) {
 		if (_.has(resObj.entities, 'list'))
 			messageData = {
 				text: `mặt hàng hiện tai chúng tôi đang có:
-			${()=>{
-				for (let i = 0; i < xhrRequest.values.length; i++) {
-					xhrRequest.values[i].value + ` `;
-				}
-			}}`
+			${() => {
+						for (let i = 0; i < xhrRequest.values.length; i++) {
+							xhrRequest.values[i].value + ` `;
+						}
+					}}`
 			}
 		else if (filterRes !== undefined) {
 			messageData = {
