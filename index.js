@@ -54,10 +54,12 @@ app.post('/webhook/', function (req, res) {
 			if (event.message && event.message.text) {
 				console.log(JSON.stringify(event.message));
 				let text = event.message.text;
-				if (event.message.nlp.hasOwnProperty("errors") && event.message.nlp.entities.hasOwnProperty("url")) {
-					faceApi(sender, text);
-				} else {
-					sendTextMessage(sender, text);
+				if (event.message.nlp.hasOwnProperty("errors")) {
+					if (event.message.nlp.entities.hasOwnProperty("url")) {
+						faceApi(sender, text);
+					} else {
+						sendTextMessage(sender, text);
+					}
 				}
 			}
 			if (event.message && event.message.attachments) {
