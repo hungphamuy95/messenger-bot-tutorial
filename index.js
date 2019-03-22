@@ -46,34 +46,39 @@ app.get('/webhook/', function (req, res) {
 // to post data
 app.post('/webhook/', function (req, res) {
 	//console.log(req.body.entry[0].messaging);
-	let messaging_events = req.body.entry[0].messaging
-	for (let i = 0; i < messaging_events.length; i++) {
-		let event = req.body.entry[0].messaging[i]
-		let sender = event.sender.id
-		if (event.message && event.message.text) {
-			console.log(JSON.stringify(event.message));
-			let text = event.message.text;
-			if (event.message.nlp.hasOwnProperty("errors") && event.message.nlp.entities.hasOwnProperty("url")) {
-				faceApi(sender, text);
-			} else {
-				sendTextMessage(sender, text);
+	try {
+		let messaging_events = req.body.entry[0].messaging;
+		for (let i = 0; i < messaging_events.length; i++) {
+			let event = req.body.entry[0].messaging[i]
+			let sender = event.sender.id
+			if (event.message && event.message.text) {
+				console.log(JSON.stringify(event.message));
+				let text = event.message.text;
+				if (event.message.nlp.hasOwnProperty("errors") && event.message.nlp.entities.hasOwnProperty("url")) {
+					faceApi(sender, text);
+				} else {
+					sendTextMessage(sender, text);
+				}
+			}
+			if (event.message && event.message.attachments) {
+				let text = event.message.text;
+				//faceApi(sender, text);
+				// let text = event.message.text
+				// let url = event.message.attachments[0].payload.url;
+				// detectImage(sender, text, url);
+				// sendTextMessage(sender, textResponse);
+			}
+			if (event.postback) {
+				let text = JSON.stringify(event.postback)
+				//sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
+				continue
 			}
 		}
-		if (event.message && event.message.attachments) {
-			let text = event.message.text;
-			//faceApi(sender, text);
-			// let text = event.message.text
-			// let url = event.message.attachments[0].payload.url;
-			// detectImage(sender, text, url);
-			// sendTextMessage(sender, textResponse);
-		}
-		if (event.postback) {
-			let text = JSON.stringify(event.postback)
-			//sendTextMessage(sender, "Postback received: " + text.substring(0, 200), token);
-			continue
-		}
+		res.sendStatus(200)
 	}
-	res.sendStatus(200)
+	catch (err) {
+		console.log(err);
+	}
 })
 
 const token = process.env.FB_PAGE_ACCESS_TOKEN;
